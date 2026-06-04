@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bites & Brews — Full Menu</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --card: #1c1c1c;
+    --border: #2a2a2a;
+    --green: #3a9e52;
+    --green-light: #5dcc74;
+    --text: #f0ece0;
+    --muted: #777;
+    --faint: #444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .page { max-width: 1140px; margin: 0 auto; padding: 44px 24px 72px; }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 28px;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .logo { font-family: 'Playfair Display', serif; font-size: clamp(34px, 6vw, 60px); font-weight: 900; color: var(--green); letter-spacing: 2px; line-height: 1; }
+  .tagline { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; margin-bottom: 36px; border-bottom: 0.5px solid var(--border); }
+  .tab { padding: 10px 28px; font-size: 12.5px; font-weight: 500; cursor: pointer; border: none; border-bottom: 2px solid transparent; background: none; color: var(--muted); letter-spacing: 0.5px; transition: all 0.2s; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--green); border-bottom-color: var(--green); }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Specials banner */
+  .banner {
+    background: var(--surface);
+    border: 0.5px solid var(--green);
+    border-radius: 6px;
+    padding: 14px 20px;
+    margin-bottom: 36px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    align-items: center;
+  }
+  .banner-title { font-family: 'Playfair Display', serif; font-size: 13px; color: var(--green); font-weight: 700; white-space: nowrap; }
+  .b-item { display: inline-flex; gap: 8px; align-items: baseline; font-size: 12px; }
+  .b-item .name { font-weight: 500; }
+  .b-item .desc { color: var(--muted); font-size: 11px; }
+  .b-item .price { color: var(--green-light); font-weight: 500; }
+  .banner-note { width: 100%; font-size: 11px; color: var(--muted); padding-top: 2px; }
+  .pipe { color: var(--faint); }
+
+  /* Section */
+  .section { margin-bottom: 32px; }
+  .section-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--green); white-space: nowrap; font-weight: 700; }
+  .section-line { flex: 1; height: 0.4px; background: var(--border); }
+
+  .subsec-title { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; padding-left: 2px; }
+
+  /* Items */
+  .item { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 10px; background: var(--card); border-left: 2px solid transparent; margin-bottom: 1px; transition: border-color 0.15s; }
+  .item:hover { border-left-color: var(--green); }
+  .item-left { flex: 1; min-width: 0; }
+  .item-name { font-size: 12.5px; font-weight: 500; color: var(--text); }
+  .item-desc { font-size: 10.5px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+  .item-price { font-size: 12.5px; font-weight: 500; color: var(--green-light); margin-left: 14px; white-space: nowrap; }
+
+  /* Grid layouts */
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+  .g4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; }
+
+  .subsec { margin-bottom: 20px; }
+
+  .note { font-size: 11px; color: var(--muted); text-align: center; padding-top: 24px; border-top: 0.4px solid var(--border); margin-top: 24px; }
+
+  @media (max-width: 800px) {
+    .g2, .g3, .g4 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<header>
+  <div class="logo">Bites &amp; Brews</div>
+  <div class="tagline">Where Every Flavor Tells a Story</div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="showTab('kitchen',this)">Kitchen Menu</button>
+  <button class="tab" onclick="showTab('bar',this)">Bar Menu</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     KITCHEN MENU
+════════════════════════════════════════════════════ -->
+<div class="panel active" id="kitchen">
+
+  <div class="banner">
+    <span class="banner-title">Our Speciality Platters</span>
+    <span class="pipe">|</span>
+    <div class="b-item"><span class="name">½ Platter</span><span class="desc">Goat, Chicken, Beef</span><span class="price">45,000 frw</span></div>
+    <span class="pipe">|</span>
+    <div class="b-item"><span class="name">Full Platter</span><span class="desc">Goat Ribs, Chicken Wings, Beef Ribs</span><span class="price">70,000 frw</span></div>
+    <span class="pipe">|</span>
+    <div class="b-item"><span class="name">Meat Feast Platter (5 pax)</span><span class="desc">Goat, Pork, Fish, Beef, Chicken, Kachumbari &amp; Chips</span><span class="price">50,000 frw</span></div>
+    <div class="banner-note">Specialty platters served with potatoes, bananas, plantain &amp; pilau rice</div>
+  </div>
+
+  <!-- Row 1: Chicken / Beef / Fish / Goat -->
+  <div class="g4">
+
+    <div class="section">
+      <div class="section-head"><span class="section-title">Chicken</span><div class="section-line"></div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Special Chicken Bite</div><div class="item-desc">Chips and salad</div></div><div class="item-price">8,500 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Chicken Curry</div><div class="item-desc">Chips and rice</div></div><div class="item-price">7,500 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Chicken Stroganoff</div><div class="item-desc">Chips and rice</div></div><div class="item-price">7,500 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Chicken Mongolian</div><div class="item-desc">Chips, rice, kachumbari, guacamole, chapati</div></div><div class="item-price">9,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Chicken Leg</div><div class="item-desc">Chips and salad</div></div><div class="item-price">7,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Chicken Wings</div><div class="item-desc">Chips and salad</div></div><div class="item-price">7,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Chicken Stew</div><div class="item-desc">Chips and rice</div></div><div class="item-price">7,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Full Chicken Inzungu</div></div><div class="item-price">20,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">½ Chicken Inzungu</div></div><div class="item-price">12,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Full Local Chicken Choma</div></div><div class="item-price">17,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Half Local Chicken Choma</div></div><div class="item-price">10,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Chicken Brochette</div></div><div class="item-price">3,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Chicken Bite Special</div></div><div class="item-price">9,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Nano Chicken</div></div><div class="item-price">10,000 frw</div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="section-title">Beef</span><div class="section-line"></div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Special Beef Bite</div><div class="item-desc">More meat, chips and salad</div></div><div class="item-price">9,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Beef Steak</div><div class="item-desc">Chips and salad</div></div><div class="item-price">8,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Beef Stroganoff</div><div class="item-desc">Chips and rice</div></div><div class="item-price">7,500 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Beef Mongolian</div><div class="item-desc">Chips, rice, kachumbari, guacamole, chapati</div></div><div class="item-price">9,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Beef Stew</div><div class="item-desc">Chips and rice</div></div><div class="item-price">7,500 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Beef Brochette</div></div><div class="item-price">2,500 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Beef Bite Special</div></div><div class="item-price">9,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Beef Igiti</div></div><div class="item-price">4,000 frw</div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="section-title">Fish</span><div class="section-line"></div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Fish Stroganoff</div><div class="item-desc">Chips and rice</div></div><div class="item-price">8,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Fish Finger</div><div class="item-desc">Chips and salad</div></div><div class="item-price">7,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Fish Curry</div><div class="item-desc">Chips and rice</div></div><div class="item-price">8,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Whole Tilapia 1.5kg</div></div><div class="item-price">20,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Fish Fillet</div></div><div class="item-price">12,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Fish Brochette</div></div><div class="item-price">3,000 frw</div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="section-title">Goat &amp; Pork</span><div class="section-line"></div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Akaguru</div></div><div class="item-price">25,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Ikidali (Ribs)</div></div><div class="item-price">25,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Goat Brochette</div></div><div class="item-price">2,500 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Zingalo</div></div><div class="item-price">3,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Whole Goat with Rice</div><div class="item-desc">On order only</div></div><div class="item-price">150,000 frw</div></div>
+      <div class="item" style="margin-top:8px;"><div class="item-left"><div class="item-name">Akabenzi ½</div></div><div class="item-price">6,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Akabenzi Full</div></div><div class="item-price">12,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Pork Ribs ½ Rack</div></div><div class="item-price">9,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Pork Ribs Full Rack</div></div><div class="item-price">18,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Pork Chops</div></div><div class="item-price">9,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Pork Kiti Moto (Wet Fry)</div></div><div class="item-price">8,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Pork Roast / Choma</div></div><div class="item-price">8,000 frw</div></div>
+    </div>
+
+  </div><!-- /g4 -->
+
+  <!-- Row 2: Burgers / Sandwiches / Wraps / Quesadillas / Pasta -->
+  <div class="g3" style="margin-top:8px;">
+
+    <div>
+      <div class="section">
+        <div class="section-head"><span class="section-title">Burgers</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Beef Smoky Town Burger</div><div class="item-desc">Beef, cheese, onions, lettuce, tomato rings</div></div><div class="item-price">6,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Kukus Peri Peri Burger</div><div class="item-desc">Chicken, cheese, onions, lettuce, tomato rings</div></div><div class="item-price">6,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Cheese Burger</div><div class="item-desc">Chips</div></div><div class="item-price">6,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">2 Step Royal Burger</div><div class="item-desc">2 patties — beef &amp; chicken, cheese, onions, lettuce</div></div><div class="item-price">8,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Bacon Boss Burger</div><div class="item-desc">Bacon, cheese, onions, lettuce, tomato rings</div></div><div class="item-price">8,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Garden Royale Burger</div><div class="item-desc">Lettuce, onion rings, tomato, guacamole, mushrooms</div></div><div class="item-price">6,500 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">Sandwiches</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Drama Queen Sandwich</div><div class="item-desc">Chips</div></div><div class="item-price">7,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Ham and Cheese Sandwich</div><div class="item-desc">Chips and salad</div></div><div class="item-price">6,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Croque Monsieur</div><div class="item-desc">Chips</div></div><div class="item-price">6,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Croque Madam</div><div class="item-desc">Chips</div></div><div class="item-price">6,500 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">Pasta</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Spaghetti Bolognaise</div></div><div class="item-price">6,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Spaghetti Napolitano</div></div><div class="item-price">5,500 frw</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section">
+        <div class="section-head"><span class="section-title">Wraps</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Beef Boss Roll + Fries</div><div class="item-desc">Flame-grilled beef strips, nano sauce, lettuce</div></div><div class="item-price">8,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Kuku Peri Heat Roll + Fries</div><div class="item-desc">Spicy grilled chicken strips, nano sauce, lettuce</div></div><div class="item-price">8,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Smoke House Wrap + Fries</div><div class="item-desc">Slow cooked BBQ pork, onions, lettuce, sauce</div></div><div class="item-price">7,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Beef Wrap</div><div class="item-desc">Chips</div></div><div class="item-price">6,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Chicken Wrap</div><div class="item-desc">Chips</div></div><div class="item-price">6,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Veggies Wrap</div><div class="item-desc">Chips</div></div><div class="item-price">6,000 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">Quesadillas</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Chicken Quesadilla</div><div class="item-desc">Chips and kachumbari</div></div><div class="item-price">7,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Beef Quesadilla</div><div class="item-desc">Chips and kachumbari</div></div><div class="item-price">7,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Veggies Quesadilla</div><div class="item-desc">Chips and kachumbari</div></div><div class="item-price">6,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Cheese Quesadilla</div><div class="item-desc">Chips and kachumbari</div></div><div class="item-price">6,000 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">East African Dishes</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Local Chicken Wet/Dry Fry ½</div></div><div class="item-price">10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Local Chicken Wet/Dry Fry Full</div></div><div class="item-price">17,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Liver Dry / Wet Fry</div></div><div class="item-price">8,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Matumbo Wet / Dry Fry</div></div><div class="item-price">8,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Mutura Portion</div></div><div class="item-price">4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Rolex Beef / Chicken</div></div><div class="item-price">4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Agatogo</div></div><div class="item-price">6,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Ugali, Veggies, Meat Sauce</div></div><div class="item-price">6,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Kawunga, Beef Stew, Veggies, Avocado</div></div><div class="item-price">7,000 frw</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section">
+        <div class="section-head"><span class="section-title">Pizzas</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Meat Deluxe Classic</div><div class="item-desc">Beef, chicken, sausage, bacon, ham</div></div><div class="item-price">11,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Chicken BBQ Classic</div><div class="item-desc">Chicken, mozarella, onions, sweet corn</div></div><div class="item-price">11,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Hawaiian Classic</div><div class="item-desc">Bacon, mozarella, pineapples, sweet corn</div></div><div class="item-price">11,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Four Seasons Classic</div><div class="item-desc">All pizza types in 6 quadrants</div></div><div class="item-price">11,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Chicken Periperi Classic</div><div class="item-desc">Spicy chicken, mozarella, sweet corn</div></div><div class="item-price">11,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Margherita Classic</div><div class="item-desc">Tomatoes, mozarella, basil, olive oil</div></div><div class="item-price">11,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Vegetable Classic</div><div class="item-desc">Mozarella, green pepper, onion, mushroom</div></div><div class="item-price">11,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Kila Kitu Classic</div><div class="item-desc">Everything in one pizza</div></div><div class="item-price">12,000 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">Others</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Special Omelette</div></div><div class="item-price">4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Cheese Sausage</div></div><div class="item-price">4,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Chips and Sausage</div></div><div class="item-price">5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Chapati</div></div><div class="item-price">1,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Sausage</div></div><div class="item-price">2,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Samosas / Meatballs (3 pcs)</div></div><div class="item-price">5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Sausage Brochette (2 pcs)</div></div><div class="item-price">5,000 frw</div></div>
+      </div>
+    </div>
+
+  </div><!-- /g3 -->
+
+  <!-- Row 3: Group Menu / Nano Bytes / Sides -->
+  <div class="g3" style="margin-top:8px;">
+
+    <div class="section">
+      <div class="section-head"><span class="section-title">Group Menu</span><div class="section-line"></div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Full Chicken with Pilau Rice (4 pax)</div><div class="item-desc">Avocado and salad</div></div><div class="item-price">25,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Piled High Fries (2 pax)</div><div class="item-desc">Chicken, chips, cheese, kachumbari, avocado, chilli mayo</div></div><div class="item-price">10,000 frw</div></div>
+      <div style="margin-top:8px;" class="subsec-title">Bites Pilau Platter — Chicken wings, fish finger, beef, sausage, chips, rice, kachumbari</div>
+      <div class="item"><div class="item-left"><div class="item-name">Small (2 pax)</div></div><div class="item-price">20,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Medium (4 pax)</div></div><div class="item-price">35,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Large (6 pax)</div></div><div class="item-price">45,000 frw</div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><span class="section-title">Nano Bytes Fried Chicken</span><div class="section-line"></div></div>
+      <div class="subsec-title" style="margin-bottom:4px;">Crunch Blasters — Spicy, Regular or Mo Faya</div>
+      <div class="item"><div class="item-left"><div class="item-name">2 Piece</div></div><div class="item-price">3,600 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">3 Piece + Regular Fries</div></div><div class="item-price">7,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">5 Piece + Regular Fries</div></div><div class="item-price">9,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">9 Piece Crunch Blaster Rack</div></div><div class="item-price">15,500 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">15 Piece Crunch Blaster Rack</div></div><div class="item-price">23,500 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">12 Piece + 2 Fries — Mega Byte Pack</div></div><div class="item-price">21,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">15 Piece + 3 Fries — Family Pack</div></div><div class="item-price">26,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">21 Piece + 3 Fries — Gigabyte Feast</div></div><div class="item-price">35,000 frw</div></div>
+      <div class="subsec-title" style="margin-top:8px; margin-bottom:4px;">Wings</div>
+      <div class="item"><div class="item-left"><div class="item-name">Nano Crunch Wings 4 Piece</div></div><div class="item-price">6,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Mega Nano Crunch 8 Piece + Fries</div></div><div class="item-price">9,000 frw</div></div>
+      <div class="item"><div class="item-left"><div class="item-name">Mega Nano Crunch 12 Piece + Fries</div></div><div class="item-price">15,000 frw</div></div>
+    </div>
+
+    <div>
+      <div class="section">
+        <div class="section-head"><span class="section-title">Sides</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Plain Rice</div></div><div class="item-price">2,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Vegetable Rice</div></div><div class="item-price">3,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Plain Chips</div></div><div class="item-price">2,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Spicy Chips</div></div><div class="item-price">3,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Regular Fries</div></div><div class="item-price">3,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Jumbo Fries</div></div><div class="item-price">5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Plantain</div></div><div class="item-price">4,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Coleslaw Salad</div></div><div class="item-price">2,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Banana Chips / Potato Wedges</div></div><div class="item-price">3,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Kawunga, Rice, Sukuma Wiki, Dodo</div></div><div class="item-price">2,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Ikirayi, Igitoki</div></div><div class="item-price">1,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Cheese Potatoes / Mizuzu</div></div><div class="item-price">4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Mashed Potatoes</div></div><div class="item-price">4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Pommes Sautte</div></div><div class="item-price">4,000 frw</div></div>
+      </div>
+    </div>
+
+  </div><!-- /g3 -->
+
+</div><!-- /kitchen panel -->
+
+
+<!-- ═══════════════════════════════════════════════════
+     BAR MENU
+════════════════════════════════════════════════════ -->
+<div class="panel" id="bar">
+
+  <div class="g3">
+
+    <!-- Column 1 -->
+    <div>
+      <div class="section">
+        <div class="section-head"><span class="section-title">Tea &amp; Hot Drinks</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">African Tea</div></div><div class="item-price">3,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Spiced Tea</div></div><div class="item-price">3,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Black Tea</div></div><div class="item-price">2,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Hot Chocolate</div></div><div class="item-price">3,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Dawa Tea</div><div class="item-desc">Ginger, lemon, honey</div></div><div class="item-price">3,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">African Coffee Pot</div></div><div class="item-price">4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Black Coffee Pot</div></div><div class="item-price">3,000 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">Soft Drinks &amp; Juices</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Soda / Fanta &amp; Waters</div></div><div class="item-price">1,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Panache</div></div><div class="item-price">1,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Water</div></div><div class="item-price">1,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Redbull</div></div><div class="item-price">5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Cocktail Juice</div></div><div class="item-price">4,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Mango Juice</div></div><div class="item-price">4,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Tree Tomato Juice</div></div><div class="item-price">4,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Pineapple Juice</div></div><div class="item-price">4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Passion Juice</div></div><div class="item-price">4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Smoothies</div></div><div class="item-price">8,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Milkshake</div></div><div class="item-price">8,000 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">Lemonade</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Pineapple &amp; Mango Lemonade</div></div><div class="item-price">4,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Mango Lemonade</div></div><div class="item-price">4,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Pineapple Lemonade</div></div><div class="item-price">4,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Tree Tomato Lemonade</div></div><div class="item-price">4,500 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">Local Beers</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Amstel</div></div><div class="item-price">2,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Mutzig</div></div><div class="item-price">2,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Heineken</div></div><div class="item-price">2,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Primus Knowless</div></div><div class="item-price">2,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Virunga Mist / Gold / Silver</div></div><div class="item-price">2,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Skol Malt</div></div><div class="item-price">2,000 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">Imported Beers</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Tusker Lager / Lite / Malt</div></div><div class="item-price">3,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Guinness Stout</div></div><div class="item-price">3,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Smirnoff Ice</div></div><div class="item-price">3,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Guarana Cannete / Exo</div></div><div class="item-price">4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Savannah Cider</div></div><div class="item-price">5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Leffe</div></div><div class="item-price">7,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Stella Artois</div></div><div class="item-price">5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Desperados</div></div><div class="item-price">4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Bavaria Alcohol / 0.0%</div></div><div class="item-price">5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Corona Extra</div></div><div class="item-price">5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Heineken 0.0%</div></div><div class="item-price">3,000 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">Champagnes &amp; Wine</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Moet Chandon / Moet Ice</div></div><div class="item-price">250,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Veuve Cliquot</div></div><div class="item-price">250,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Sparkling Wine</div></div><div class="item-price">60,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Wine — Bottle</div></div><div class="item-price">30,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Wine — Glass</div></div><div class="item-price">6,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">House Wine Pitchet</div></div><div class="item-price">12,000 frw</div></div>
+      </div>
+    </div>
+
+    <!-- Column 2 -->
+    <div>
+      <div class="section">
+        <div class="section-head"><span class="section-title">Gins</span><div class="section-line"></div></div>
+        <div class="subsec-title" style="margin-bottom:4px;">Bottle / Shot</div>
+        <div class="item"><div class="item-left"><div class="item-name">Beefeater</div></div><div class="item-price">60,000 / 4,500 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Beefeater Pink</div></div><div class="item-price">60,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Bombay Sapphire</div></div><div class="item-price">100,000 / 5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Gibson Gin</div></div><div class="item-price">50,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Gilbeys</div></div><div class="item-price">25,000 / 3,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Gordons Gin</div></div><div class="item-price">55,000 / 4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Hendricks Gin</div></div><div class="item-price">200,000 / 8,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Konyagi (750ml)</div></div><div class="item-price">18,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Tanqueray Gin</div></div><div class="item-price">90,000 / 7,000 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">Vodkas</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Absolute Vodka</div></div><div class="item-price">80,000 / 4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Grey Goose Vodka</div></div><div class="item-price">250,000 / 10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Skyy Vodka</div></div><div class="item-price">80,000 / 4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Smirnoff Vodka</div></div><div class="item-price">50,000 / 3,000 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">Tequila</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Camino Tequila</div></div><div class="item-price">65,000 / 4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Olmeca Tequila</div></div><div class="item-price">95,000 / 7,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Don Julio Tequila</div></div><div class="item-price">400,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Jose Cuervo Tequila</div></div><div class="item-price">130,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Tequila Patron Cafe</div></div><div class="item-price">230,000 / 10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Tequila Patron Silver</div></div><div class="item-price">230,000 / 10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Tequila Rose</div></div><div class="item-price">150,000 / 5,000 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">Liqueurs</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Amarula</div></div><div class="item-price">70,000 / 10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Bacardi</div></div><div class="item-price">— / 4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Baileys</div></div><div class="item-price">120,000 / 15,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Cointreau</div></div><div class="item-price">90,000 / 7,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Jagermeister</div></div><div class="item-price">130,000 / 4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Martini Bianco</div></div><div class="item-price">65,000 / 8,000 frw</div></div>
+      </div>
+    </div>
+
+    <!-- Column 3 -->
+    <div>
+      <div class="section">
+        <div class="section-head"><span class="section-title">Whiskys &amp; Cognacs</span><div class="section-line"></div></div>
+        <div class="subsec-title" style="margin-bottom:4px;">Bottle / Shot</div>
+        <div class="item"><div class="item-left"><div class="item-name">Ballantines</div></div><div class="item-price">70,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Captain Morgan Spice</div></div><div class="item-price">65,000 / 5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Chivas 12 Yrs</div></div><div class="item-price">130,000 / 5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Chivas 15 Yrs</div></div><div class="item-price">150,000 / 6,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Chivas 18 Yrs</div></div><div class="item-price">250,000 / 10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Courvoisier VSOP</div></div><div class="item-price">250,000 / 10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Famous Grouse</div></div><div class="item-price">70,000 / 4,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Glenfiddich 12 Yrs</div></div><div class="item-price">200,000 / 10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Glenfiddich 15 Yrs</div></div><div class="item-price">250,000 / 12,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Glenfiddich 18 Yrs</div></div><div class="item-price">300,000 / 15,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Grants Whisky</div></div><div class="item-price">150,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Hennessy VS</div></div><div class="item-price">250,000 / 10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Hennessy VSOP</div></div><div class="item-price">300,000 / 15,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Jack Daniels</div></div><div class="item-price">95,000 / 7,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Jack Daniels Honey</div></div><div class="item-price">160,000 / 5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Jameson</div></div><div class="item-price">65,000 / 5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Jameson Black Barrel</div></div><div class="item-price">150,000 / 5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Jameson Green</div></div><div class="item-price">100,000 / 5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">JW Red Label</div></div><div class="item-price">65,000 / 5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">JW Black Label</div></div><div class="item-price">130,000 / 5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">JW Double Black</div></div><div class="item-price">180,000 / 7,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Martel VS</div></div><div class="item-price">250,000 / 10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Remy Martin VSOP</div></div><div class="item-price">250,000 / 10,000 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">Mocktails &amp; Mojitos</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Virgin Mojito</div></div><div class="item-price">5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Classic Mojito</div></div><div class="item-price">5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Sunset Mocktail</div></div><div class="item-price">5,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Sunrise Mocktail</div></div><div class="item-price">5,000 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">Cocktails</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Brews Cocktail</div><div class="item-desc">Tequila, campari, martini rosso</div></div><div class="item-price">10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Long Island</div><div class="item-desc">Vodka, gin, rum, tequila, triple sec, cola</div></div><div class="item-price">12,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Negroni</div><div class="item-desc">Gin, sweet vermouth, campari</div></div><div class="item-price">10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Dawa Cocktail</div><div class="item-desc">Gin, lime juice, ginger, honey</div></div><div class="item-price">10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Tequila Sunrise</div><div class="item-desc">Tequila, orange juice, lime, grenadine</div></div><div class="item-price">10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Gin Tonic</div><div class="item-desc">Gin, krest, cucumber, lime</div></div><div class="item-price">10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Lava Lady</div><div class="item-desc">Cointreau, gin, lemon, sprite, grenadine</div></div><div class="item-price">12,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Whiskey Sour</div><div class="item-desc">Whiskey, lemon juice and syrup</div></div><div class="item-price">10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Classic Margarita</div><div class="item-desc">Tequila, triple sec, lemon juice</div></div><div class="item-price">10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Lemon Crush</div><div class="item-desc">Vodka, triple sec, lemon, sprite</div></div><div class="item-price">10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Cosmopolitan</div></div><div class="item-price">10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Cuba Libre</div></div><div class="item-price">10,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">House Cocktail</div></div><div class="item-price">15,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Sex on the Beach</div></div><div class="item-price">10,000 frw</div></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><span class="section-title">Special Brews Shots</span><div class="section-line"></div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Bleu Shot</div><div class="item-desc">Malibu, blue curacao, lemon</div></div><div class="item-price">6,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">BMV Shot</div><div class="item-desc">Amarula, malibu, whiskey, lemon</div></div><div class="item-price">7,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Brews Shot</div><div class="item-desc">Tequila, vodka, white rum, lemon</div></div><div class="item-price">7,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">B52 Shot</div><div class="item-desc">Coffee liqueur, amarula, cointreau</div></div><div class="item-price">7,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Jaggerbomb</div></div><div class="item-price">8,000 frw</div></div>
+        <div class="item"><div class="item-left"><div class="item-name">Margarita</div></div><div class="item-price">10,000 frw</div></div>
+      </div>
+
+    </div><!-- /col3 -->
+
+  </div><!-- /g3 -->
+
+  <div class="note">All drinks are subject to availability &nbsp;·&nbsp; Not for sale to persons under 18 years &nbsp;·&nbsp; Drink responsibly</div>
+
+</div><!-- /bar panel -->
+
+</div><!-- /page -->
+
+<script>
+function showTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
